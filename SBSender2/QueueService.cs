@@ -47,7 +47,9 @@ namespace SBSendReceiveDelete
                 {
                     await using (client)
                     {
-                        await Task.WhenAll(messageTasks).ConfigureAwait(false); // OBS The order of completion of the input tasks is not guaranteed to match the order in which they were added to the WhenAll method.
+                        await Task.WhenAll(messageTasks).ConfigureAwait(false); // The completion order of tasks in Task.WhenAll does not match the order in which they were added.
+                                                                                // This means that the order of messages sent to a queue may not be preserved.
+                                                                                // Use only in cases where message order is not crucial."
 
                         var count = messageTasks.Count;
                         var output = count > 1 ? $"{count} messages were successfully sent!" : "One message has been successfully sent";
