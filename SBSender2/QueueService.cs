@@ -1,4 +1,7 @@
 ﻿using Azure.Messaging.ServiceBus;
+using Microsoft.Azure.Amqp.Framing;
+using Microsoft.Azure.ServiceBus;
+using System.Diagnostics;
 
 namespace SBSendReceiveDelete
 {
@@ -89,27 +92,32 @@ namespace SBSendReceiveDelete
 
                 var messages = await receiver.ReceiveMessagesAsync(maxMessages).ConfigureAwait(false);
 
-                var output = messages.Count > 1 ? $"Messages to delete: {messages.Count}" : "One message to delete";
+                /*
+                 * Important!
+                  The ServiceBusReceivedMessage method may not return exactly maxMessages messages even if there are maxMessages messages available in the queue or topic due to
+                  the possibility of race conditions and other factors. A race condition occurs when two or more processes access the same resource simultaneously 
+                  and try to modify it at the same time, leading to unpredictable results.
+                  Additionally, other factors such as network latency, server load, and message processing time can also impact the number of messages returned by the ServiceBusReceivedMessage method
+                */
 
+                var output = messages.Count > 1 ? $"Messages to delete: {messages.Count}" : "One message to delete";
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"{output}" + Environment.NewLine);
                 Console.WriteLine("The process of deleting has started.." + Environment.NewLine );
-
                 messages.ToList().ForEach(msg =>
                 {
                     Thread.Sleep(1000); // just for funn
                     Console.WriteLine($"Deleted message: {msg?.Body?.ToString()}");
                 });
-
                 Console.WriteLine();
                 Console.WriteLine("The process of deleting is complete..");
                 Console.ForegroundColor = ConsoleColor.White;
-            }
-            catch (Exception e)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Something went wrong!");
-                Console.ForegroundColor = ConsoleColor.White;
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Something went wrong!");
+                    Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(e.Message);
             }
         }
