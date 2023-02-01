@@ -1,2 +1,2 @@
 # ServiceBusDemo
-Just palying with Azure Service Bus
+Just playing with Azure Service Bus
