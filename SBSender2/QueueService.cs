@@ -101,23 +101,27 @@ namespace SBSendReceiveDelete
                 */
 
                 var output = messages.Count > 1 ? $"Messages to delete: {messages.Count}" : "One message to delete";
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"{output}" + Environment.NewLine);
                 Console.WriteLine("The process of deleting has started.." + Environment.NewLine );
+
                 messages.ToList().ForEach(msg =>
                 {
                     Thread.Sleep(1000); // just for funn
                     Console.WriteLine($"Deleted message: {msg?.Body?.ToString()}");
                 });
+
                 Console.WriteLine();
                 Console.WriteLine("The process of deleting is complete..");
                 Console.ForegroundColor = ConsoleColor.White;
+
                 }
-                catch (Exception e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Something went wrong!");
-                    Console.ForegroundColor = ConsoleColor.White;
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Something went wrong!");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(e.Message);
             }
         }
