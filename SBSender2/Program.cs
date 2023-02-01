@@ -1,4 +1,4 @@
-﻿// Nugget: Azure.Messaging.ServiceBus => 26:54 
+﻿// NuGet: Azure.Messaging.ServiceBus 
 
 namespace SBSendReceiveDelete
 {

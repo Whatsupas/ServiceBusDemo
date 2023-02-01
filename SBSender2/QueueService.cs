@@ -1,5 +1,4 @@
 ﻿using Azure.Messaging.ServiceBus;
-using Microsoft.Azure.ServiceBus;
 
 namespace SBSendReceiveDelete
 {
