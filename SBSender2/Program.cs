@@ -9,7 +9,7 @@ namespace SBSendReceiveDelete
         {
             var queueService = new QueueService();
             queueService.SendMessageAsync(_queueName).GetAwaiter().GetResult();
-            queueService.DeleteMessagesInQueue(_queueName, 2).GetAwaiter().GetResult();
+            queueService.DeleteMessagesInQueue(_queueName, 100).GetAwaiter().GetResult();
         }
     }
 }

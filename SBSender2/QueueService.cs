@@ -24,8 +24,6 @@ namespace SBSendReceiveDelete
 
                 // Create a sender for the queue.
                 var sender = client.CreateSender(queueName);
-             
-
 
                 var lines = new List<string> { "first", "second", "third" };
                 var messageTasks = new List<Task>();
@@ -64,7 +62,6 @@ namespace SBSendReceiveDelete
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Missing inputs. Messages have not been sent!");
                     Console.ForegroundColor = ConsoleColor.White;
-
                 }
             }
             catch (Exception e)
@@ -96,7 +93,7 @@ namespace SBSendReceiveDelete
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"{output}" + Environment.NewLine);
-                Console.WriteLine("Deleting started.." + Environment.NewLine );
+                Console.WriteLine("The process of deleting has started.." + Environment.NewLine );
 
                 messages.ToList().ForEach(msg =>
                 {
@@ -105,7 +102,7 @@ namespace SBSendReceiveDelete
                 });
 
                 Console.WriteLine();
-                Console.WriteLine("Deleting ended..");
+                Console.WriteLine("The process of deleting is complete..");
                 Console.ForegroundColor = ConsoleColor.White;
             }
             catch (Exception e)
