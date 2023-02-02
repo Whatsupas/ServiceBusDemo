@@ -12,7 +12,7 @@ namespace SBSendReceiveDelete
 
             // I'm using a single console terminal for testing purposes"
             queueService.SendMessageToQueueAsync(_queueName).GetAwaiter().GetResult();
-            queueService.DeleteMessagesInQueue(_queueName, 2).GetAwaiter().GetResult();
+            queueService.ReceiveAndDeleteMessagesFromQueue(_queueName, 2).GetAwaiter().GetResult();
             queueService.SendMessageToTopicAsync(_topicName).GetAwaiter().GetResult();
         }
     }

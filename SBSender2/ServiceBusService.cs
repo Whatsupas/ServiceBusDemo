@@ -84,7 +84,7 @@ namespace SBSendReceiveDelete
         /// <param name="queueName">The queue name</param>
         /// <param name="maxMessages">The maximum number of messages that will be received.</param>
         /// <returns></returns>
-        public async Task DeleteMessagesInQueue(string queueName, ushort maxMessages)
+        public async Task ReceiveAndDeleteMessagesFromQueue(string queueName, ushort maxMessages)
         {
             try
             {
