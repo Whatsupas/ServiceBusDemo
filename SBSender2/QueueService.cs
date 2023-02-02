@@ -108,7 +108,7 @@ namespace SBSendReceiveDelete
 
                 messages.ToList().ForEach(msg =>
                 {
-                    Thread.Sleep(1000); // just for funn
+                    Thread.Sleep(1000); // just for fun
                     Console.WriteLine($"Deleted message: {msg?.Body?.ToString()}");
                 });
 
