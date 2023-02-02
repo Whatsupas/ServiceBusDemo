@@ -2,20 +2,22 @@
 using Microsoft.Azure.Amqp.Framing;
 using Microsoft.Azure.ServiceBus;
 using System.Diagnostics;
+using System.Drawing;
+using System.Reflection;
 
 namespace SBSendReceiveDelete
 {
-    public class QueueService
+    public class ServiceBusService
     {
-        private const string _connectionString = "TODO";
-
+        private const string _connectionString = "secret";
+        private const string _connectionStringTopic = "secret";
         /// <summary>
         /// Sends up to three messages entered by the user
         /// </summary>
         /// <param name="queueName">The queue name</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task SendMessageAsync(string queueName)
+        public async Task SendMessageToQueueAsync(string queueName)
         {
             if (string.IsNullOrEmpty(queueName))
                 throw new ArgumentException("Missing queue name. Please provide one and try again!");
@@ -33,7 +35,7 @@ namespace SBSendReceiveDelete
 
                 lines.ForEach(line =>
                 {
-                    Console.WriteLine($"Please enter the {line} message you want to send end press enter button");
+                    Console.WriteLine($"Please enter the {line} message you want to send into the queue and press enter button");
                     var inputLine = Console.ReadLine();
                     Console.Clear();
 
@@ -53,7 +55,7 @@ namespace SBSendReceiveDelete
                                                                                 // Use only in cases where message order is not crucial."
 
                         var count = messageTasks.Count;
-                        var output = count > 1 ? $"{count} messages were successfully sent!" : "One message has been successfully sent";
+                        var output = count > 1 ? $"{count} messages were successfully sent to queue!" : "One message has been successfully sent to queue";
 
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine(output + Environment.NewLine);
@@ -63,7 +65,7 @@ namespace SBSendReceiveDelete
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Missing inputs. Messages have not been sent!");
+                    Console.WriteLine("Missing inputs. Messages have not been sent to queue!");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
@@ -104,7 +106,7 @@ namespace SBSendReceiveDelete
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"{output}" + Environment.NewLine);
-                Console.WriteLine("The process of deleting has started.." + Environment.NewLine );
+                Console.WriteLine("The process of deleting has started.." + Environment.NewLine);
 
                 messages.ToList().ForEach(msg =>
                 {
@@ -116,13 +118,72 @@ namespace SBSendReceiveDelete
                 Console.WriteLine("The process of deleting is complete..");
                 Console.ForegroundColor = ConsoleColor.White;
 
-                }
+            }
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Something went wrong!");
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(e.Message);
+            }
+        }
+        public async Task SendMessageToTopicAsync(string topicName)
+        {
+            if (string.IsNullOrEmpty(topicName))
+                throw new ArgumentException("Missing topic name. Please provide one and try again!");
+
+            try
+            {
+                // Create a service bus client
+                var client = new ServiceBusClient(_connectionStringTopic);
+
+                // Create a sender for the queue.
+                var sender = client.CreateSender(topicName);
+
+                Console.WriteLine();
+                Console.WriteLine($"Please enter the message you want to send into the topic and press enter button");
+                Console.WriteLine();
+                var inputLine = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(inputLine))
+                {
+                    await using (client)
+                    {
+                        var message = new ServiceBusMessage(inputLine);
+
+                       /*
+                        * Important!
+                        Testing manually added MessageId.Normally, Message IDs are generated automatically when the Service Bus receives a message.
+                        However, if you are processing messages asynchronously and receive them at a later point, adding a
+                        Message ID manually provides an opportunity to identify the original sequence, if this is a requirement
+                       */
+
+                        var testID = Guid.NewGuid().ToString();
+                        message.MessageId = testID;
+
+                        sender.SendMessageAsync(message).GetAwaiter().GetResult();
+
+                        var output = "Message has been successfully sent to topic as well";
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine(output + Environment.NewLine);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
+                }
+                else 
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Missing inputs. Messages have not been sent to topic!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Something went wrong!");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(ex.Message);
             }
         }
     }

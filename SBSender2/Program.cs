@@ -5,11 +5,15 @@ namespace SBSendReceiveDelete
     public class Program
     {
         private const string _queueName = "rtqueuedemo";
+        private const string _topicName = "rttopicdemo";
         static void Main(string[] args)
         {
-            var queueService = new QueueService();
-            queueService.SendMessageAsync(_queueName).GetAwaiter().GetResult();
-            queueService.DeleteMessagesInQueue(_queueName, 100).GetAwaiter().GetResult();
+            var queueService = new ServiceBusService();
+
+            // I'm using a single console terminal for testing purposes"
+            queueService.SendMessageToQueueAsync(_queueName).GetAwaiter().GetResult();
+            queueService.DeleteMessagesInQueue(_queueName, 2).GetAwaiter().GetResult();
+            queueService.SendMessageToTopicAsync(_topicName).GetAwaiter().GetResult();
         }
     }
 }
