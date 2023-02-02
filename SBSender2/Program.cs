@@ -8,12 +8,12 @@ namespace SBSendReceiveDelete
         private const string _topicName = "rttopicdemo";
         static void Main(string[] args)
         {
-            var queueService = new ServiceBusService();
+            var sbService = new ServiceBusService();
 
-            // I'm using a single console terminal for testing purposes"
-            queueService.SendMessageToQueueAsync(_queueName).GetAwaiter().GetResult();
-            queueService.ReceiveAndDeleteMessagesFromQueue(_queueName, 2).GetAwaiter().GetResult();
-            queueService.SendMessageToTopicAsync(_topicName).GetAwaiter().GetResult();
+            // I'm using a single console terminal for testing purposes
+            sbService.SendMessageToQueueAsync(_queueName).GetAwaiter().GetResult();
+            sbService.ReceiveAndDeleteMessagesFromQueue(_queueName, 2).GetAwaiter().GetResult();
+            sbService.SendMessageToTopicAsync(_topicName).GetAwaiter().GetResult();
         }
     }
 }
